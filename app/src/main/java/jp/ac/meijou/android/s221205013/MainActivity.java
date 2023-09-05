@@ -11,6 +11,7 @@ import jp.ac.meijou.android.s221205013.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
+    private PrefDataStore prefDataStore;
     private int textRes;
     private int imageRes;
 
@@ -19,28 +20,36 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        binding.button.setOnClickListener(view -> {
+        prefDataStore = PrefDataStore.getInstance(this);
+        prefDataStore.getString("name")
+                .ifPresent(name -> binding.text.setText(name));
+        binding.saveButton.setOnClickListener(view -> {
+            var text = binding.editTextText.getText().toString();
+            prefDataStore.setString("name", text);
+        });
+
+        binding.changeButton.setOnClickListener(view -> {
             var text = binding.editTextText.getText().toString();
             binding.text.setText(text);
         });
 
-        binding.editTextText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                // テキストが更新される直前に呼ばれる
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                // 文字を1つ入力された時に呼ばれる
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                // テキストが更新されたあとに呼ばれる
-                binding.text.setText(editable.toString());
-            }
-        });
+//        binding.editTextText.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                // テキストが更新される直前に呼ばれる
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                // 文字を1つ入力された時に呼ばれる
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//                // テキストが更新されたあとに呼ばれる
+//                binding.text.setText(editable.toString());
+//            }
+//        });
 
     }
 }
